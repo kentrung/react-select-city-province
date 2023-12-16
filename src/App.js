@@ -2,47 +2,51 @@ import { useState } from "react";
 import { mockData } from "./mockData";
 
 export default function App() {
-  const [provinces, setProvinces] = useState([]);
   const [dataInfo, setDataInfo] = useState({
     selectedCity: "",
     isSelectedCity: false,
     selectedProvince: "",
     isSelectedProvince: false,
+    provinceList: [],
   });
 
   const handleChangeCity = (event) => {
-    const selectedCity = event.target.value;
-    if (selectedCity === "") {
-      setProvinces([]);
+    const city = event.target.value;
+    if (city === "") {
       setDataInfo({
         selectedCity: "",
         isSelectedCity: false,
         selectedProvince: "",
         isSelectedProvince: false,
+        provinceList: [],
       });
       return;
     }
-    const filterCity = mockData.find((item) => item.id === selectedCity);
+    const filterCity = mockData.find((item) => item.id === city);
     const filterProvince = filterCity.province;
-    setProvinces(filterProvince);
     setDataInfo({
-      selectedCity,
+      selectedCity: city,
       isSelectedCity: true,
       selectedProvince: "",
       isSelectedProvince: false,
+      provinceList: filterProvince,
     });
   };
 
   const handleChangeProvince = (event) => {
-    const selectedProvince = event.target.value;
-    if (selectedProvince === "") {
+    const province = event.target.value;
+    if (province === "") {
       setDataInfo({
         ...dataInfo,
         selectedProvince: "",
         isSelectedProvince: false,
       });
     } else {
-      setDataInfo({ ...dataInfo, selectedProvince, isSelectedProvince: true });
+      setDataInfo({
+        ...dataInfo,
+        selectedProvince: province,
+        isSelectedProvince: true,
+      });
     }
   };
 
@@ -60,7 +64,7 @@ export default function App() {
       <h2>Chọn quận</h2>
       <select className="form-select mb-3" onChange={handleChangeProvince}>
         <option value="">Chọn quận</option>
-        {provinces.map((province) => (
+        {dataInfo.provinceList.map((province) => (
           <option key={province.id} value={province.id}>
             {province.name}
           </option>
